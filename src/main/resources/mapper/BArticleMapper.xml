@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.git.mapper.BArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.git.model.entity.BArticle">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="user_id" property="userId" />
+        <result column="cover_image" property="coverImage" />
+        <result column="qrcode_path" property="qrcodePath" />
+        <result column="editor_type" property="editorType" />
+        <result column="content" property="content" />
+        <result column="top" property="top" />
+        <result column="tag_name" property="tagName" />
+        <result column="status" property="status" />
+        <result column="recommended" property="recommended" />
+        <result column="article_nature" property="articleNature" />
+        <result column="description" property="description" />
+        <result column="keywords" property="keywords" />
+        <result column="comment" property="comment" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
+        <result column="is_public" property="isPublic" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, user_id, cover_image, qrcode_path, editor_type, content, top, tag_name, status, recommended, article_nature, description, keywords, comment, create_time, update_time, is_public
+    </sql>
+
+</mapper>
