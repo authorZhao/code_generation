@@ -1,7 +1,10 @@
 package com.git.service;
 
+import com.git.model.dto.UserArticleDto;
 import com.git.model.entity.OUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OUserService extends IService<OUser> {
 
+    List<UserArticleDto> selectUserArticle();
 }

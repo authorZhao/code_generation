@@ -1,5 +1,6 @@
 package com.git.service.impl;
 
+import com.git.model.dto.UserArticleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import com.git.mapper.OUserMapper;
 import com.git.service.OUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +26,9 @@ public class OUserServiceImpl extends ServiceImpl<OUserMapper, OUser> implements
 
     @Autowired
     private OUserMapper oUserMapper;
+
+    @Override
+    public List<UserArticleDto> selectUserArticle() {
+        return oUserMapper.selectUserArticle();
+    }
 }

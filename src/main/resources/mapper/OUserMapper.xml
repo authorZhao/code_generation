@@ -3,7 +3,7 @@
 <mapper namespace="com.git.mapper.OUserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.git.model.entity.OUser">
+    <resultMap id="BaseResultMap" type="com.git.model.dto.UserArticleDto">
         <id column="user_id" property="userId" />
         <result column="username" property="username" />
         <result column="password" property="password" />
@@ -26,4 +26,7 @@
         user_id, username, password, salt, dept_id, email, mobile, status, create_time, update_time, last_login_time, sex, theme, head_img, description
     </sql>
 
+    <resultMap id="selectUserArticle" type="com.git.model.dto.UserArticleDto" extends="BaseResultMap">
+        <collection property="articleList" ofType="com.git.model.entity.BArticle" autoMapping="true"></collection>
+    </resultMap>
 </mapper>

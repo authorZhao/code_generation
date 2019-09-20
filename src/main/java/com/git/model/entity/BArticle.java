@@ -119,13 +119,13 @@ public class BArticle implements Serializable {
     * 添加时间
     */
     @ApiModelProperty(value = "添加时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
     * 更新时间
     */
     @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
     * 0公开，1私密
