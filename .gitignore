@@ -28,6 +28,5 @@ hs_err_pid*
 src/test/**
 .gitignore
 code_generation.iml
-pom.xml
 target/**
 

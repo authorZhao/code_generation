@@ -43,10 +43,12 @@ public class RunApp {
         //AutoGenerator mpg = new AutoGenerator();
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir");//获得当前类的路径
+        //String projectPath = System.getProperty("user.dir");//获得当前类的路径
+        String projectPath = "E:/idea/workpace/space6/http-reptile";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setBaseResultMap(true);//生成映射map
         gc.setBaseColumnList(true);
+        gc.setFileOverride(true);//文件覆盖
         gc.setAuthor("authorZhao");
         gc.setOpen(false);
         gc.setSwagger2(true); //实体属性 Swagger2 注解
@@ -56,7 +58,7 @@ public class RunApp {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/open_md?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull");
+        dsc.setUrl("jdbc:mysql://localhost:3306/qdz?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
