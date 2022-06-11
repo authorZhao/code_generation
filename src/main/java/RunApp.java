@@ -1,7 +1,6 @@
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -11,6 +10,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class RunApp {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         //String projectPath = System.getProperty("user.dir");//获得当前类的路径
-        String projectPath = "E:/idea/workpace/space6/http-reptile";
+        String projectPath = "E:\\java\\workspace\\space1\\admin-server";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setBaseResultMap(true);//生成映射map
         gc.setBaseColumnList(true);
@@ -58,23 +58,24 @@ public class RunApp {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/qdz?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull");
+        dsc.setUrl("jdbc:mysql://192.168.30.47:3306/cube?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setUsername("cube");
+        dsc.setPassword("cube123456");
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
         //pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.git");
-        pc.setController("api.controller");
-        pc.setEntity("model.entity");
+        pc.setParent("com.cube.project.app");
+        pc.setController("controller");
+        pc.setEntity("domain");
         pc.setMapper("mapper");
-        //pc.setXml()
+        pc.setXml("app");
         pc.setServiceImpl("service.impl");
         pc.setService("service");
+
 
         mpg.setPackageInfo(pc);
 

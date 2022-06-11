@@ -1,0 +1,16 @@
+# cube数据库表字段信息
+
+<th:block th:each="table : ${tables}">
+## [(${table.tableName})]（[(${table.comment})]）
+
+
+| mysql字段 | mongo字段 | 注释 | 类型 |
+| ---- | ---- | ---- | -------- |
+<th:block th:each="column : ${table.sqlColumnList}">|   [[${column.columnName}]]   |   [[${column.camelColumnName}]]   |  [[${column.comment}]]    |  [[${column.sqlType}]]    |
+</th:block>
+
+
+
+</th:block>
+
+

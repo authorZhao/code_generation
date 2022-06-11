@@ -1,0 +1,59 @@
+package [(${packageName})];
+
+import engine.db.AbstractBeanDTO;
+import engine.utils.ClassType;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * <p>
+ * [(${tableComment})]
+ * </p>
+ *
+ * @author [(${author})]
+ * @since [(${date})]
+ */
+public class [(${tableName})]Bean extends AbstractBeanDTO{
+
+    [(${classTypeMap})]
+
+    <th:block th:each="column : ${columns}">
+    /**
+     * [[${column.comment}]]
+     */
+    private [[${column.javaType1}]] [[${column.camelColumnName}]];
+    </th:block>
+
+    static {
+    <th:block th:each="column : ${columns}">    classTypeMap.put("[[${column.camelColumnName}]]", [[${column.javaType2}]]);
+    </th:block>}
+
+    /**
+     * 直接使用Bean时必需使用此构做方法
+     *
+     * @param tableName
+     * @param valueCol
+     * @param keyCol
+     * @param keyValue
+     */
+    public [(${tableName})]Bean(String tableName, String valueCol, String keyCol, int keyValue) {
+        super(tableName, valueCol, keyCol, keyValue);
+    }
+
+
+    public [(${tableName})]Bean(int keyValue) {
+        super("[(${tableName})]", "[(${tableName})]", "userId", keyValue);
+    }
+
+    @Override
+    protected Map<String, ClassType> readStorageColAndClass() {
+        return classTypeMap;
+    }
+
+    @Override
+    protected int _readDefColKeyValue() {
+        return userId;
+    }
+
+}

@@ -1,7 +1,5 @@
 package ${package.Controller};
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ${package.Service}.${entity}Service;
@@ -36,7 +34,6 @@ class ${table.controllerName}#if(${superControllerClass}) : ${superControllerCla
 public class ${table.controllerName} extends ${superControllerClass} {
 #else
 public class ${table.controllerName} {
-    private final Logger logger = LoggerFactory.getLogger(${table.controllerName}.class);
 
     @Autowired
     private ${entity}Service ${table.entityPath}Service;
