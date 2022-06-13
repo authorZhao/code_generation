@@ -1,0 +1,22 @@
+import com.cube.BaseProto;
+import lombok.Data;
+
+/**
+ * @author authorZhao
+ * @since 2022-06-13
+ */
+@Data
+public class [(${clazz.name})] {
+
+    <th:block th:each="innerClass : ${clazz.innerClasses}">
+
+    @Data
+    public <th:if text="${innerClass.type==enum}">enum</th:if><th:if text="!${innerClass.type==enum}">static class</th:if>${innerClass.name} implements BaseProto{
+
+    }
+    </th:block>
+
+
+}
+
+
