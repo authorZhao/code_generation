@@ -6,13 +6,16 @@ import lombok.Data;
  * @since 2022-06-13
  */
 @Data
-public class [(${clazz.name})] {
+public class [(${outClass.name})] {
 
-    <th:block th:each="innerClass : ${clazz.innerClasses}">
+    <th:block th:each="innerClass : ${outClass.innerClassList}">
 
     @Data
-    public <th:if text="${innerClass.type==enum}">enum</th:if><th:if text="!${innerClass.type==enum}">static class</th:if>${innerClass.name} implements BaseProto{
+    public <th:block th:if="${innerClass.isEnum}">enum</th:block><th:block th:if="${!innerClass.isEnum}">static class </th:block>[(${innerClass.name})] implements BaseProto{
 
+        <th:block th:each="inMethod : ${innerClass.inMethodList}">
+            private [(${inMethod.fieldType})] [(${inMethod.fieldName})];
+        </th:block>
     }
     </th:block>
 

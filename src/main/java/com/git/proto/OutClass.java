@@ -18,13 +18,20 @@ public class OutClass {
     private List<InClass> innerClassList;
 
     public static String getOutName(String className){
-        int indexOf = className.lastIndexOf(".");
+        int indexOf = className.lastIndexOf(".")+1;
         return className.substring(indexOf,className.length()-5)+"DTO";
     }
 
-    public static String getInName(String outName,String inClassName){
-        int indexOf = inClassName.lastIndexOf("$");
-        return outName+inClassName.substring(indexOf);
+    public static String getInName(String inClassName){
+        int indexOf = inClassName.lastIndexOf("$")+1;
+        return inClassName.substring(indexOf);
+    }
+
+    public static String getFieldName(String name){
+        if(name.endsWith("_")){
+            return name.substring(0,name.length()-1);
+        }
+        return name;
     }
 
 

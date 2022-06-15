@@ -3,6 +3,8 @@ package com.git.proto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @author authorZhao
  * @since 2022-06-14
@@ -12,4 +14,7 @@ import lombok.experimental.Accessors;
 public class InClass {
     private String name;
     private String type;
+    private Boolean isEnum = Boolean.FALSE;
+    private Class realClass;
+    private List<InMethod> inMethodList;
 }

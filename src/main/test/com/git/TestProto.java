@@ -1,12 +1,15 @@
 package com.git;
 
+import com.cube.protocol.ActivityProto;
 import com.git.mapper.SqlMapper;
 import com.git.proto.InClass;
+import com.git.proto.InMethod;
 import com.git.proto.OutClass;
 import com.git.th.SqlColumn;
 import com.git.th.SqlTable;
 import com.git.util.CmdUtil;
 import com.git.util.MyClassLoader;
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
@@ -17,6 +20,8 @@ import org.thymeleaf.context.Context;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,19 +38,13 @@ import java.util.stream.Collectors;
 public class TestProto {
 
     public static void main(String[] args) throws Exception {
-        File file = new File("E:\\idea\\workspace3\\gan\\app-backend\\backend-proto\\src\\main\\java\\com\\cube\\protocol\\ActivityProto.java");
-        byte[] bytes = FileUtils.readFileToByteArray(file);
-        Class<?> aClass = MyClassLoader.instance().defineClassForName("com.cube.protocol.ActivityProto", bytes);
+        Class<?> aClass = ActivityProto.class;
         Class<?>[] classes = aClass.getClasses();
         String outClassName = aClass.getName();
         String outName = OutClass.getOutName(outClassName);
         List<InClass> inClassList = Arrays.stream(classes).filter(i ->
                 !i.getName().endsWith("Builder") && !i.isInterface()
-        ).map(i ->
-                new InClass()
-                        .setType(i.getTypeName())
-                        .setName(OutClass.getInName(outName, i.getName()))
-        ).collect(Collectors.toList());
+        ).map(TestProto::getInClass).collect(Collectors.toList());
 
         TemplateEngine templateEngine = new TemplateEngine();
         Context context = new Context();
@@ -56,12 +55,46 @@ public class TestProto {
 
         context.setVariable("author","authorZhao");
         context.setVariable("date", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()));
-        String template = FileUtils.readFileToString(new File("E:\\java\\workspace\\space2\\code_generation\\src\\main\\resources\\templates\\proto.th"), StandardCharsets.UTF_8);
-        String outPutPath = "C:\\Users\\Admin\\Desktop\\工作文档\\worknote\\txt\\"+outName+".java";
+        String template = FileUtils.readFileToString(new File("E:\\idea\\workpace\\space7\\code_generation\\src\\main\\resources\\templates\\proto.th"), StandardCharsets.UTF_8);
+        String outPutPath = "C:\\Users\\authorZhao\\Desktop\\note\\gen\\java\\"+outName+".java";
         FileWriter fileWriter = new FileWriter(outPutPath);
         templateEngine.process(template, context,fileWriter);
         CmdUtil.openWithCode(outPutPath);
     }
+
+    private static InClass getInClass(Class<?> i) {
+        return new InClass()
+                .setType(i.getTypeName())
+                .setName(OutClass.getInName( i.getName()))
+                .setRealClass(i.getClass())
+                .setIsEnum(i.getTypeName().contains("enum"))
+                .setInMethodList(getInMethod(i));
+    }
+
+    private static List<InMethod> getInMethod(Class<?> clazz) {
+        Field[] declaredFields = clazz.getDeclaredFields();
+        return Arrays.stream(declaredFields).filter(i->{
+            boolean isStatic = Modifier.isStatic(i.getModifiers());
+            boolean isFinal = Modifier.isFinal(i.getModifiers());
+            String name = i.getName();
+            List<String> excluded = Lists.newArrayList("memoizedIsInitialized"
+            ,"bitField0_","memoizedSerializedSize");
+            boolean bitField0_ = excluded.contains(name);
+            return !isStatic && !isFinal && !bitField0_;
+        }).map(i->{
+                    String simpleType = i.getType().getSimpleName();
+                    String fieldName = OutClass.getFieldName(i.getName());
+                    if("Object".equals(simpleType) && fieldName.startsWith("s")){
+                        simpleType = "String";
+                    }
+                    return new InMethod()
+                            .setFieldName(fieldName)
+                            .setFieldRealType(i.getType())
+                            .setFieldType(simpleType);
+        }
+        ).collect(Collectors.toList());
+    }
+
 
 
     private static final char UNDERLINE = '_';
