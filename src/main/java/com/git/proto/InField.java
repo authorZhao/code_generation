@@ -3,7 +3,7 @@ package com.git.proto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author authorZhao
@@ -11,10 +11,16 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class InClass {
+public class InField {
+
     private String name;
-    private String type;
-    private Class clazz;
-    private Set<InField> inFieldSet;
-    private Boolean isEnum;
+
+    private Class realType;
+
+    /**
+     * String，Integer 等
+     */
+    private String javaType;
+
+
 }

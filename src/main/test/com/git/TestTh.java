@@ -34,8 +34,8 @@ public class TestTh {
 
     @Test
     public void test1() throws Exception {
-        String tableName = "ClockMark";
-        SqlTable sqlTable = queryTable("cube", "clock_mark_t");
+        String tableName = "CdKey";
+        SqlTable sqlTable = queryTable("cube", "cd_key_t");
         List<SqlColumn> sqlColumns = sqlTable.getSqlColumnList();
 
         TemplateEngine templateEngine = new TemplateEngine();

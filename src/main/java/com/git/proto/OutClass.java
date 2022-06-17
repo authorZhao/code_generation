@@ -15,16 +15,24 @@ public class OutClass {
 
     private String name;
 
+    private String allName;
+
     private List<InClass> innerClassList;
 
+    private Class clazz;
+
     public static String getOutName(String className){
-        int indexOf = className.lastIndexOf(".");
+        int indexOf = className.lastIndexOf(".")+1;
         return className.substring(indexOf,className.length()-5)+"DTO";
     }
 
-    public static String getInName(String outName,String inClassName){
-        int indexOf = inClassName.lastIndexOf("$");
-        return outName+inClassName.substring(indexOf);
+    /**
+     * 获取类全名
+     * @param className
+     * @return
+     */
+    public static String getAllOutName(String className){
+        return className.substring(0,className.length()-5)+"DTO";
     }
 
 

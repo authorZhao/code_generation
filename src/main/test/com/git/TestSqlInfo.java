@@ -32,7 +32,7 @@ public class TestSqlInfo {
 
     @Test
     public void test1() throws Exception {
-        String databases = "cube-admin";
+        String databases = "cube";
         List<SqlTable> sqlTables = queryTables(databases);
         sqlTables = sqlTables.stream().filter(TestSqlInfo::filterTables).collect(Collectors.toList());
 
