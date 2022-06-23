@@ -3,6 +3,7 @@ package com.git;
 import com.baidu.bjf.remoting.protobuf.ProtobufIDLProxy;
 import com.baidu.bjf.remoting.protobuf.utils.StringUtils;
 import com.git.util.CmdUtil;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -92,5 +93,6 @@ public class TestJProtoBuf {
     private static void help() {
         System.out.println(" Usage: java -jar  jprotobuf-jar-with-dependencies.jar  --java_out=.  test.proto");
     }
+
 }
 

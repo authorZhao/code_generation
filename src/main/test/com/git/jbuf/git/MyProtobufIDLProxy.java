@@ -20,6 +20,7 @@ package com.git.jbuf.git;
 
 import com.baidu.bjf.remoting.protobuf.*;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.baidu.bjf.remoting.protobuf.code.ClassCode;
 import com.baidu.bjf.remoting.protobuf.utils.CodePrinter;
 import com.baidu.bjf.remoting.protobuf.utils.JDKCompilerHelper;
@@ -31,7 +32,10 @@ import com.baidu.jprotobuf.com.squareup.protoparser.FieldElement.Label;
 import com.baidu.jprotobuf.com.squareup.protoparser.OptionElement.Kind;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is for dynamic create protobuf utility class directly from .proto file
@@ -40,6 +44,7 @@ import java.util.*;
  * @since 1.0.2
  */
 public class MyProtobufIDLProxy {
+    private static String DATE;
 
     /** The Constant JAVA_SUFFIX. */
     private static final String JAVA_SUFFIX = ".java";
@@ -185,6 +190,8 @@ public class MyProtobufIDLProxy {
         fieldTypeMapping.put("sint32", "FieldType.SINT32");
         fieldTypeMapping.put("enum", "FieldType.ENUM");
         fieldTypeMapping.put("map", "FieldType.MAP");
+
+        DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     /** auto proxied suffix class name. */
@@ -604,12 +611,7 @@ public class MyProtobufIDLProxy {
         // define class
         //
         generateCommentsForEnum(code,type);
-
-        if (topLevelClass) {
-            code.append("\npublic enum ");
-        } else {
-            code.append("\npublic static enum ");
-        }
+        code.append("public enum ");
         code.append(simpleName).append(" implements EnumReadable {\n");
 
         Iterator<EnumConstantElement> iter = type.constants().iterator();
@@ -693,8 +695,10 @@ public class MyProtobufIDLProxy {
             code.append("import com.baidu.bjf.remoting.protobuf.FieldType;\n");
             code.append("import com.baidu.bjf.remoting.protobuf.EnumReadable;\n");
             code.append("import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;\n");
-            code.append("import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n");
+
         }
+
+        generateCommentsForClass(code,type,protoFile);
 
         // define class
         String clsName;
@@ -955,20 +959,105 @@ public class MyProtobufIDLProxy {
      * @param code 当前代码
      * @param type 当前类型
      * @param protoFile 所有类型
+     * @return 是否返回协议码
      */
     private static void generateCommentsForClass(StringBuilder code, MessageElement type, ProtoFile protoFile) {
         TypeElement typeElement = protoFile.typeElements().stream().filter(i -> i.name().equals(type.name())).findFirst().orElse(null);
         if(typeElement==null){
             return;
         }
-        code.append("    /**").append(ClassCode.LINE_BREAK);
-        code.append("     * ").append(typeElement.documentation()).append(ClassCode.LINE_BREAK);
-        code.append("     * ");
-        code.append("     */").append(ClassCode.LINE_BREAK);
+        String documentation = typeElement.documentation();
+        if(StringUtils.isEmpty(documentation)){
+            documentation = "";
+        }else {
+            documentation = documentation.trim();
+        }
+        String[] split = documentation.split("\n");
+        Integer protoId = null;
+        try{
+            protoId = Integer.parseInt(split[split.length-1]);
+            String collect = Arrays.stream(split).collect(Collectors.toList()).subList(0, split.length - 1).stream().collect(Collectors.joining());
+
+            code.append("import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n");
+
+            String comment = """
+                
+                /**
+                 * %d
+                 * %s 
+                 * @author authorZhao
+                 * @since %s
+                 */
+                """;
+
+            comment = String.format(comment,protoId,collect,DATE);
+            code.append(comment);
+            code.append("@ProtobufClass(description = \""+protoId+"\")");
+        }catch (Exception e){
+            String comment = """
+                
+                /**
+                 * %s
+                 * @author authorZhao
+                 * @since %s
+                 */
+                """;
+            comment = String.format(comment,documentation,DATE);
+            code.append(comment);
+        }
+
+
+
+        /*code.append("    /**").append(ClassCode.LINE_BREAK);
+        code.append("     * ").append(documentation).append(ClassCode.LINE_BREAK);
+        code.append("     * ").append(ClassCode.LINE_BREAK);*/
+        //code.append("     */").append(ClassCode.LINE_BREAK);
     }
 
+    /**
+     * 生成枚举注释
+     * @param code
+     * @param type
+     */
     private static void generateCommentsForEnum(StringBuilder code, EnumElement type) {
+        String documentation = type.documentation();
+        if(StringUtils.isEmpty(documentation)){
+            documentation = "";
+        }else {
+            documentation = documentation.trim();
+        }
 
+        String[] split = documentation.split("\n");
+        Integer protoId = null;
+        //code.append("import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n");
+        try{
+            protoId = Integer.parseInt(split[split.length-1]);
+            String collect = Arrays.stream(split).collect(Collectors.toList()).subList(0, split.length - 1).stream().collect(Collectors.joining());
+            String comment = """
+                
+                /**
+                 * %d
+                 * %s
+                 * @author authorZhao
+                 * @since %s
+                 */
+                """;
+
+            comment = String.format(comment,protoId,collect,DATE);
+            code.append(comment);
+            code.append("@ProtoId("+protoId+")");
+        }catch (Exception e){
+            String comment = """
+                /**
+                 * %s
+                 * @author authorZhao
+                 * @since %s
+                 */
+                """;
+            comment = String.format(comment,documentation,DATE);
+            code.append(comment);
+        }
+        //code.append("@ProtobufClass\n");
     }
 
 
@@ -1149,9 +1238,8 @@ public class MyProtobufIDLProxy {
             code.append("import com.baidu.bjf.remoting.protobuf.EnumReadable;\n");
             //}
             code.append("import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;\n");
-            code.append("import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n");
-
             code.append("import lombok.Data;\n");
+            code.append("import lombok.experimental.Accessors;\n");
         }
 
         // define class
@@ -1160,9 +1248,9 @@ public class MyProtobufIDLProxy {
         // generate comments
         generateCommentsForClass(code, type,protoFile);
         if (topLevelClass) {
-            clsName = "\n@Data\n@ProtobufClass\npublic class ";
+            clsName = "\n@Data\n@Accessors(chain = true)\npublic class ";
         } else {
-            clsName = "\n@Data\n@ProtobufClass\npublic static class ";
+            clsName = "\n@Data\n@Accessors(chain = true)\npublic static class ";
         }
         code.append(clsName).append(simpleName).append(" {\n");
 
@@ -1267,7 +1355,7 @@ public class MyProtobufIDLProxy {
             }
 
             // define field
-            code.append("    public ").append(javaType);
+            code.append("    private ").append(javaType);
 
             String fieldName = field.name();
             // format java style
